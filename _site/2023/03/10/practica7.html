@@ -1,0 +1,108 @@
+<h1 id="iaw-practica-134-aarón-garcía-crisol"><strong>iaw-practica 13.4 (Aarón García Crisol)</strong></h1>
+<h1 id="ansible">Ansible</h1>
+
+<p>En esta practica debemos de desplegar mediante Ansible las infraestructuras de la practica 7 y la practica 9.</p>
+
+<h2 id="infraestructura-de-la-practica-7">Infraestructura de la practica 7</h2>
+
+<p>Para ello crearemos un archivo main.yml, el cual irá lanzando los playbooks que tendremos alojados en nuestra carpeta playbook, el contenido tanto de los playbooks como del main.yml es el siguiente:</p>
+
+<h3 id="playbookbackendyml">playbook/backend.yml</h3>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Playbook para crear grupo de seguridad e instancia para Backend</span>
+  <span class="na">hosts</span><span class="pi">:</span> <span class="s">localhost</span>
+  <span class="na">connection</span><span class="pi">:</span> <span class="s">local</span>
+  <span class="na">gather_facts</span><span class="pi">:</span> <span class="no">false</span>
+  <span class="na">vars</span><span class="pi">:</span>
+    <span class="na">nombre_sg</span><span class="pi">:</span> <span class="s">backend-sg</span>
+    <span class="na">descripcion_sg</span><span class="pi">:</span> <span class="s">grupo de seguridad para Backend</span>
+    <span class="na">nombre_instancia</span><span class="pi">:</span> <span class="s">Backend</span>
+    <span class="na">id_ami</span><span class="pi">:</span> <span class="s">ami-06878d265978313ca</span>
+    <span class="na">tipo_instancia</span><span class="pi">:</span> <span class="s">t2.small</span>
+    <span class="na">key</span><span class="pi">:</span> <span class="s">vockey</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Creamos el grupo de seguridad</span>
+    <span class="na">ec2_group</span><span class="pi">:</span>
+      <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">description</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">rules</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">proto</span><span class="pi">:</span> <span class="s">tcp</span>
+        <span class="na">from_port</span><span class="pi">:</span> <span class="m">22</span>
+        <span class="na">to_port</span><span class="pi">:</span> <span class="m">22</span>
+        <span class="na">cidr_ip</span><span class="pi">:</span> <span class="s">0.0.0.0/0</span>
+      <span class="pi">-</span> <span class="na">proto</span><span class="pi">:</span> <span class="s">tcp</span>
+        <span class="na">from_port</span><span class="pi">:</span> <span class="m">3306</span>
+        <span class="na">to_port</span><span class="pi">:</span> <span class="m">3306</span>
+        <span class="na">cidr_ip</span><span class="pi">:</span> <span class="s">0.0.0.0/0</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Creamos la instancia</span>
+    <span class="na">ec2_instance</span><span class="pi">:</span>
+      <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">key_name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">security_group</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">instance_type</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">image_id</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">state</span><span class="pi">:</span> <span class="s">running</span>
+    <span class="na">register</span><span class="pi">:</span> <span class="s">inst</span>
+</code></pre></div></div>
+
+<h3 id="playbookfrontendyml">playbook/frontend.yml</h3>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Playbook para crear grupo de seguridad e instancia para Frontend</span>
+  <span class="na">hosts</span><span class="pi">:</span> <span class="s">localhost</span>
+  <span class="na">connection</span><span class="pi">:</span> <span class="s">local</span>
+  <span class="na">gather_facts</span><span class="pi">:</span> <span class="no">false</span>
+  <span class="na">vars</span><span class="pi">:</span>
+    <span class="na">nombre_sg</span><span class="pi">:</span> <span class="s">frontend-sg</span>
+    <span class="na">descripcion_sg</span><span class="pi">:</span> <span class="s">grupo de seguridad para Frontend</span>
+    <span class="na">nombre_instancia</span><span class="pi">:</span> <span class="s">Frontend</span>
+    <span class="na">id_ami</span><span class="pi">:</span> <span class="s">ami-06878d265978313ca</span>
+    <span class="na">tipo_instancia</span><span class="pi">:</span> <span class="s">t2.small</span>
+    <span class="na">key</span><span class="pi">:</span> <span class="s">vockey</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Creamos el grupo de seguridad</span>
+    <span class="na">ec2_group</span><span class="pi">:</span>
+      <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">description</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">rules</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">proto</span><span class="pi">:</span> <span class="s">tcp</span>
+        <span class="na">from_port</span><span class="pi">:</span> <span class="m">22</span>
+        <span class="na">to_port</span><span class="pi">:</span> <span class="m">22</span>
+        <span class="na">cidr_ip</span><span class="pi">:</span> <span class="s">0.0.0.0/0</span>
+      <span class="pi">-</span> <span class="na">proto</span><span class="pi">:</span> <span class="s">tcp</span>
+        <span class="na">from_port</span><span class="pi">:</span> <span class="m">80</span>
+        <span class="na">to_port</span><span class="pi">:</span> <span class="m">80</span>
+        <span class="na">cidr_ip</span><span class="pi">:</span> <span class="s">0.0.0.0/0</span>
+      <span class="pi">-</span> <span class="na">proto</span><span class="pi">:</span> <span class="s">tcp</span>
+        <span class="na">from_port</span><span class="pi">:</span> <span class="m">443</span>
+        <span class="na">to_port</span><span class="pi">:</span> <span class="m">443</span>
+        <span class="na">cidr_ip</span><span class="pi">:</span> <span class="s">0.0.0.0/0</span>
+    <span class="na">register</span><span class="pi">:</span> <span class="s">sg</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Creamos la instancia</span>
+    <span class="na">ec2_instance</span><span class="pi">:</span>
+      <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">key_name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">security_group</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">instance_type</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">image_id</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">state</span><span class="pi">:</span> <span class="s">running</span>
+    <span class="na">register</span><span class="pi">:</span> <span class="s">inst</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Mostramos el contenido de la variable inst</span>
+    <span class="na">debug</span><span class="pi">:</span>
+      <span class="na">msg</span><span class="pi">:</span> <span class="s2">"</span><span class="s">inst:</span><span class="nv"> </span><span class="s">"</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Creamos una IP elástica y la asociar a la instancia</span>
+    <span class="na">ec2_eip</span><span class="pi">:</span>
+      <span class="na">device_id</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">register</span><span class="pi">:</span> <span class="s">ip_elas</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Mostramos cual es nuestra IP elastica</span>
+    <span class="na">debug</span><span class="pi">:</span>
+      <span class="na">msg</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Nuestra</span><span class="nv"> </span><span class="s">IP</span><span class="nv"> </span><span class="s">elástica</span><span class="nv"> </span><span class="s">es:</span><span class="nv"> </span><span class="s">"</span>
+</code></pre></div></div>
+
+<h3 id="mainyml">main.yml</h3>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+  <span class="pi">-</span> <span class="na">import_playbook</span><span class="pi">:</span> <span class="s">./playbook/backend.yml</span>
+  <span class="pi">-</span> <span class="na">import_playbook</span><span class="pi">:</span> <span class="s">./playbook/frontend.yml</span>
+</code></pre></div></div>
