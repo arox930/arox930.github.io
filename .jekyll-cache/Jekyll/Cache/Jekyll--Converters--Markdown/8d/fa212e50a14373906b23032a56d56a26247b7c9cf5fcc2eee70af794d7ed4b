@@ -1,4 +1,4 @@
-<h1 id="iaw-practica-134-aarón-garcía-crisol"><strong>iaw-practica 13.4 (Aarón García Crisol)</strong></h1>
+I"�'<h1 id="iaw-practica-134-aarón-garcía-crisol"><strong>iaw-practica 13.4 (Aarón García Crisol)</strong></h1>
 <h1 id="ansible">Ansible</h1>
 
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Ansible_logo.svg/375px-Ansible_logo.svg.png" /></p>
@@ -108,3 +108,4 @@
   <span class="pi">-</span> <span class="na">import_playbook</span><span class="pi">:</span> <span class="s">./playbook/backend.yml</span>
   <span class="pi">-</span> <span class="na">import_playbook</span><span class="pi">:</span> <span class="s">./playbook/frontend.yml</span>
 </code></pre></div></div>
+:ET
